@@ -14,7 +14,7 @@ import pytest
 from src.core.api.os_helpers import OSHelper
 from src.core.util.arg_parser import get_core_args, set_core_arg
 from src.core.util.json_utils import update_run_index, create_run_log
-from src.core.util.run_report import create_footer
+from src.core.util.run_report import create_footer, create_ci_report
 from src.core.util.test_assert import create_result_object
 from src.email_report.email_client import submit_email_report
 
@@ -92,6 +92,10 @@ class BaseTarget:
         update_run_index(self, True)
         footer = create_footer(self)
         result = footer.print_report_footer()
+
+        if core_args.ci:
+            create_ci_report(self.completed_tests)
+
         create_run_log(self)
 
         logger.info('\n' + 'Test session {} complete'.format(session.name).center(shutil.get_terminal_size().columns, '-'))

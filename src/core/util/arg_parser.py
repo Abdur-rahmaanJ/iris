@@ -49,6 +49,10 @@ def get_core_args():
                         help='Clear run data',
                         default=False,
                         action='store_true')
+    parser.add_argument('-ci', '--ci',
+                        help='Enable output for CI system',
+                        default=False,
+                        action='store_true')
     parser.add_argument('-d', '--directory',
                         help='Directory name containing tests to execute',
                         action='store',

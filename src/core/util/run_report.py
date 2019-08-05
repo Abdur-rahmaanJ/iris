@@ -79,7 +79,6 @@ def create_footer(app):
     total_duration = 0
 
     failed_tests = []
-
     for test in app.completed_tests:
 
         if test.outcome == 'FAILED':
@@ -97,6 +96,24 @@ def create_footer(app):
 
     total_tests = passed + skipped + failed + errors
     return ReportFooter(app, total_tests, passed, failed, skipped, errors, total_duration, failed_tests)
+
+
+def create_ci_report(tests):
+    ci_report_str = ''
+    for test in tests:
+        if test.outcome == 'FAILED' or test.outcome == 'ERROR':
+            fail_str = 'FAIL' if 'FAIL'  in test.outcome else 'ERROR'
+            local_test_dir = '%stests%s' % (os.sep, os.sep)
+            local_path = test.file_name.split(local_test_dir)[1]
+            temp_path = local_path.split(os.sep)
+            test_name = temp_path[len(temp_path)-1]
+            temp_path.pop()
+            temp_path.pop(0)
+            ci_report_str += 'TEST-UNEXPECTED-%s | ' % fail_str
+            for section in temp_path:
+                ci_report_str += '%s | ' % section
+            ci_report_str += '%s | %s\n' % (test_name, test.message)
+    logger.info('CI Test results:\n%s' % ci_report_str)
 
 
 def _get_additional_info(values):
