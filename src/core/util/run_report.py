@@ -102,12 +102,11 @@ def create_ci_report(tests):
     ci_report_str = ''
     for test in tests:
         if test.outcome == 'FAILED' or test.outcome == 'ERROR':
-            fail_str = 'FAIL' if 'FAIL'  in test.outcome else 'ERROR'
+            fail_str = 'FAIL' if 'FAIL' in test.outcome else 'ERROR'
             local_test_dir = '%stests%s' % (os.sep, os.sep)
             local_path = test.file_name.split(local_test_dir)[1]
             temp_path = local_path.split(os.sep)
-            test_name = temp_path[len(temp_path)-1]
-            temp_path.pop()
+            test_name = temp_path.pop()
             temp_path.pop(0)
             ci_report_str += 'TEST-UNEXPECTED-%s | ' % fail_str
             for section in temp_path:
